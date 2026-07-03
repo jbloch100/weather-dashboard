@@ -45,29 +45,32 @@ function App() {
     <main>
       <h1>Weather Dashboard</h1>
       <p>Search for a city and view the current weather.</p>
+      
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Enter a city"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
 
-      <input
-        type="text"
-        placeholder="Enter a city"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-      />
-
-      <button onClick={getWeather}>
-        Search Weather
-      </button>
-
-      <p>Current city: {city}</p>
+        <button onClick={getWeather}>
+          Search Weather
+        </button>
+      </div>
 
       {weather && (
-        <div>
+        <div className="weather-card">
           <h2>{weather.city}</h2>
 
-          <p>🌡️ Temperature: {weather.temperature}°C</p>
+          <p className="temperature">
+            🌡️ {weather.temperature}°C
+          </p>
 
           <p>💧 Humidity: {weather.humidity}%</p>
 
           <p>💨 Wind Speed: {weather.windSpeed} km/h</p>
+          
         </div>
       )}
     </main>
