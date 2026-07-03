@@ -13,31 +13,39 @@ function App() {
 
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState<Weather | null>(null);
+  const [loading, setLoading] = useState(false);
 
   async function getWeather() {
-    const response = await fetch(
-      `https://geocoding-api.open-meteo.com/v1/search?name=${city}`
-    );
-    const data = await response.json();
 
-    const latitude = data.results[0].latitude;
-    const longitude = data.results[0].longitude;
+    setLoading(true);
 
-    const weatherResponse = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m`
-    );
+    try {
+      const response = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${city}`
+      );
+      const data = await response.json();
 
-    const weatherData = await weatherResponse.json();
+      const latitude = data.results[0].latitude;
+      const longitude = data.results[0].longitude;
 
-    setWeather({
-      city: city,
-      temperature: weatherData.current.temperature_2m,
-      condition: "Current Weather",
-      humidity: weatherData.current.relative_humidity_2m,
-      windSpeed: weatherData.current.wind_speed_10m,
-    });
+      const weatherResponse = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m`
+      );
 
-    console.log(weatherData.current);
+      const weatherData = await weatherResponse.json();
+
+      setWeather({
+        city: city,
+        temperature: weatherData.current.temperature_2m,
+        condition: "Current Weather",
+        humidity: weatherData.current.relative_humidity_2m,
+        windSpeed: weatherData.current.wind_speed_10m,
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }
  
 
@@ -58,6 +66,8 @@ function App() {
           Search Weather
         </button>
       </div>
+
+      {loading && <p>Searching...</p>}
 
       {weather && (
         <div className="weather-card">
