@@ -14,6 +14,7 @@ function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState<Weather | null>(null);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function getWeather() {
 
@@ -25,6 +26,10 @@ function App() {
       );
       const data = await response.json();
 
+      if (!data.results || data.results.length === 0) {
+        throw new Error("City not found.");
+      }
+
       const latitude = data.results[0].latitude;
       const longitude = data.results[0].longitude;
 
@@ -34,6 +39,8 @@ function App() {
 
       const weatherData = await weatherResponse.json();
 
+      setErrorMessage("");
+
       setWeather({
         city: city,
         temperature: weatherData.current.temperature_2m,
@@ -42,7 +49,10 @@ function App() {
         windSpeed: weatherData.current.wind_speed_10m,
       });
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+        setWeather(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -68,6 +78,10 @@ function App() {
       </div>
 
       {loading && <p>Searching...</p>}
+
+      {errorMessage && (
+        <p className="error">{errorMessage}</p>
+      )}
 
       {weather && (
         <div className="weather-card">
