@@ -64,3 +64,8 @@ button:hover {
   background: #1d4ed8;
   transform: translateY(-2px);
 }
+
+.condition {
+  font-weight: 600;
+  color: #555;
+}

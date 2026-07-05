@@ -9,6 +9,25 @@ type Weather = {
   windSpeed: number;
 };
 
+function getWeatherCondition(weatherCode: number) {
+  switch (weatherCode) {
+    case 0:
+      return "☀️ Clear Sky";
+    case 1:
+      return "🌤️ Mainly Clear";
+    case 2:
+      return "⛅ Partly Cloudy";
+    case 3:
+      return "☁️ Overcast";
+    case 61:
+      return "🌧️ Rain";
+    case 71:
+      return "❄️ Snow";
+    default:
+      return "🌍 Unknown";
+  }
+}
+
 function App() {
 
   const [city, setCity] = useState("");
@@ -34,17 +53,19 @@ function App() {
       const longitude = data.results[0].longitude;
 
       const weatherResponse = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m`
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`
       );
 
       const weatherData = await weatherResponse.json();
+
+      console.log(weatherData.current.weather_code);
 
       setErrorMessage("");
 
       setWeather({
         city: city,
         temperature: weatherData.current.temperature_2m,
-        condition: "Current Weather",
+        condition: getWeatherCondition(weatherData.current.weather_code),
         humidity: weatherData.current.relative_humidity_2m,
         windSpeed: weatherData.current.wind_speed_10m,
       });
@@ -64,7 +85,13 @@ function App() {
       <h1>Weather Dashboard</h1>
       <p>Search for a city and view the current weather.</p>
       
-      <div className="search-bar">
+      <form 
+        className="search-bar"
+        onSubmit={(e) => {
+          e.preventDefault();
+          getWeather();
+        }}
+      >
         <input
           type="text"
           placeholder="Enter a city"
@@ -72,10 +99,10 @@ function App() {
           onChange={(e) => setCity(e.target.value)}
         />
 
-        <button onClick={getWeather}>
+        <button type="submit">
           Search Weather
         </button>
-      </div>
+      </form>
 
       {loading && <p>Searching...</p>}
 
@@ -86,6 +113,8 @@ function App() {
       {weather && (
         <div className="weather-card">
           <h2>{weather.city}</h2>
+
+          <p className="condition">{weather.condition}</p>
 
           <p className="temperature">
             🌡️ {weather.temperature}°C
