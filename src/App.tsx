@@ -35,6 +35,29 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+
+  async function fetchWeatherByCoordinates(
+    latitude: number,
+    longitude: number,
+    locationName: string
+  ) {
+    const weatherResponse = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`
+    );
+
+    const weatherData = await weatherResponse.json();
+
+    setErrorMessage("");
+
+    setWeather({
+      city: locationName,
+      temperature: weatherData.current.temperature_2m,
+      condition: getWeatherCondition(weatherData.current.weather_code),
+      humidity: weatherData.current.relative_humidity_2m,
+      windSpeed: weatherData.current.wind_speed_10m,
+    });
+  }
+
   async function getWeather() {
 
     setLoading(true);
@@ -52,23 +75,8 @@ function App() {
       const latitude = data.results[0].latitude;
       const longitude = data.results[0].longitude;
 
-      const weatherResponse = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`
-      );
+      await fetchWeatherByCoordinates(latitude, longitude, city);
 
-      const weatherData = await weatherResponse.json();
-
-      console.log(weatherData.current.weather_code);
-
-      setErrorMessage("");
-
-      setWeather({
-        city: city,
-        temperature: weatherData.current.temperature_2m,
-        condition: getWeatherCondition(weatherData.current.weather_code),
-        humidity: weatherData.current.relative_humidity_2m,
-        windSpeed: weatherData.current.wind_speed_10m,
-      });
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -77,6 +85,19 @@ function App() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function getCurrentLocation() {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      await fetchWeatherByCoordinates(
+        latitude,
+        longitude,
+        "My Location"
+      );
+    });
   }
  
 
@@ -103,6 +124,13 @@ function App() {
           Search Weather
         </button>
       </form>
+
+      <button 
+        type="button"
+        onClick={getCurrentLocation}
+      >
+        📍 Use My Location
+      </button>
 
       {loading && <p>Searching...</p>}
 
