@@ -1,32 +1,125 @@
-# React + TypeScript + Vite
+# 🌤️ Weather Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A responsive Weather Dashboard built with **React**, **TypeScript**, and **Vite** that displays real-time weather information using the Open-Meteo APIs. Users can search for weather by city or use their current location to view live weather conditions.
 
-Currently, two official plugins are available:
+## 🚀 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Live Website:** https://weather-dashboard-phi-neon.vercel.app/
 
-## React Compiler
+## 📸 Screenshot
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+![Weather Dashboard](weather-dashboard-screenshot.png)
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## ✨ Features
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+* Search weather by city name
+* Search by pressing the **Enter** key
+* Get weather using your current location
+* Display:
+
+  * Temperature
+  * Weather condition
+  * Humidity
+  * Wind speed
+* Loading indicator while fetching weather
+* Error handling for invalid city names
+* Responsive design for:
+
+  * Mobile
+  * Tablet
+  * Laptop
+  * Desktop
+
+---
+
+## 🛠️ Built With
+
+* React
+* TypeScript
+* Vite
+* CSS3
+* Open-Meteo Geocoding API
+* Open-Meteo Weather Forecast API
+* Browser Geolocation API
+
+Open-Meteo provides free weather and geocoding APIs that require no API key for non-commercial use.
+
+---
+
+## 📚 What I Learned
+
+While building this project, I practiced:
+
+* React Hooks (`useState`)
+* TypeScript interfaces/types
+* Event handling
+* Conditional rendering
+* Asynchronous JavaScript (`async` / `await`)
+* Fetching data from REST APIs
+* Working with multiple APIs
+* Browser Geolocation API
+* Error handling using `try`, `catch`, and `finally`
+* Refactoring code into reusable helper functions
+* Responsive web design using CSS media queries
+
+---
+
+## 💻 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/jbloch100/weather-dashboard
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Navigate into the project:
+
+```bash
+cd weather-dashboard
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+---
+
+## 📂 Project Structure
+
+```text
+src/
+ ├── App.tsx
+ ├── App.css
+ ├── main.tsx
+ └── assets/
+```
+
+---
+
+## 🌍 APIs Used
+
+* Open-Meteo Geocoding API
+* Open-Meteo Weather Forecast API
+* Browser Geolocation API
+
+---
+
+## 📄 License
+
+This project is open source and available under the MIT License.
