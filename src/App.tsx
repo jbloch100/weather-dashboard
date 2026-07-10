@@ -88,19 +88,36 @@ function App() {
   }
 
   function getCurrentLocation() {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
+    if (!navigator.geolocation) {
+      setErrorMessage("Geolocation is not supported by your browser.");
+      return;
+    }
 
-      await fetchWeatherByCoordinates(
-        latitude,
-        longitude,
-        "My Location"
-      );
-    });
+    setLoading(true);
+    setErrorMessage("");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        await fetchWeatherByCoordinates(
+          latitude,
+          longitude,
+          "My Location"
+        );
+
+        setLoading(false);
+      },
+      (error) => {
+        console.error(error);
+        setErrorMessage("Location access failed. Please allow location permission or search by city.");
+        setWeather(null);
+        setLoading(false);
+      }
+    );
   }
  
-
   return (
     <main>
       <h1>Weather Dashboard</h1>
